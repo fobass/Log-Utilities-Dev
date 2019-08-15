@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log Uilities</title>
+  <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="./node_modules/xel/themes/material.css">
+  <script src="./node_modules/xel/xel.min.js"></script>
+  
+</head>
+<body>
+    <div class="content" id="id_content">
+        <x-doctabs id="id_doctabs">
+            <x-doctab selected>
+              <x-label>Welcome </x-label>
+            </x-doctab>
+          </x-doctabs>
+    </div>
+   
+    <!-- sidebar -->
+  	<aside class="sidebar"> 
+      <div class="logo">	
+          <img src="" alt="">
+      </div>
+      <div class="sidebar-menu"> 
+          <li>
+            <a class="nav-link" id="Order" href="#"><span class="glyphicon glyphicon-envelope"></span></a>
+          </li>
+          <li>
+            <a class="nav-link" id="Atp" href="#"><span class="glyphicon glyphicon-cog"></span></a>
+          </li>
+          <li>
+            <a class="nav-link" id="Aeed" href="#"><span class="glyphicon glyphicon-film"></span></a>
+          </li>
+      </div> 
+    </aside>
+
+    <div class="footer">
+    </div><!-- .footer -->
+    <script src="./view.js"></script>
+    
+  <div class="requester-header">
+      <script>
+        require('./titlebar_render.js')
+        require('./node_modules/datatables.net/js/jquery.dataTables.js')
+      </script>
+  </div>
+
+</body>
+</html>
+
