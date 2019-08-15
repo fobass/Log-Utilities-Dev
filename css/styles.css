@@ -8,17 +8,17 @@
 			background:#eee;
     }
     .content {
-			top: 0;
-      left: 60px;
+			top: 0px;
+      left: 200px;
       position: relative;
-      width: calc(100% - 60px);
-      height: 100%;
+      width: calc(100% - 200px);
+      height: calc(100% - 20px);
       border: 3px solid green;
 			/* padding: 9px 0; */
       background-color: slategray;
       overflow-y:auto; 
       padding-right:9px;
-      padding-bottom: 30px;
+      /* padding-bottom: 100px; */
   }
 		.logo img{
 			width:20px;
@@ -31,9 +31,9 @@
 			position: fixed;
 			top: 0;
 			left: 0;
-			width: 60px;
+			width: 50px;
 			height: 100%;
-			padding: 9px 0;
+			padding: 16px 0;
 			background-color:#184775;
     }
     .sidebar-menu {
@@ -44,14 +44,14 @@
     .sidebar .sidebar-menu a {
         display: block;
         text-align: center;
-        padding: 16px;
+        padding: 14px;
         color: #ccc;
         font-size: 12px;
     }
 
     .sidebar .sidebar-menu a .glyphicon {
       color:#666;
-      font-size:30px;
+      font-size:24px;
       margin-left: 0px;
     }
 
@@ -61,6 +61,16 @@
 
     .sidebar li.active > a .glyphicon {
       color:white;
+    }
+
+    .sidebar-list-content {
+			position: fixed;
+			top: 0;
+			left: 50px;
+			width: 150px;
+			height: 100%;
+			padding: 16px 0;
+			background-color:#2D2D30;
     }
     
     .footer {
@@ -82,6 +92,7 @@
     --open-button-height: 0;
     --open-button-margin: 0;
   }
+
 
  
 

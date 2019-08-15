@@ -1,8 +1,9 @@
 "use strict";
+let $ = require('jquery')
 const ipc = require('electron').ipcRenderer
 const dialog = require('electron').remote.dialog
 const selectDirBtn = document.getElementById('select-directory')
-let $ = require('jquery')
+
 require('datatables.net')();
 let fs = require('fs')
 let filename = '2018-11-13_Ticket.log'
@@ -11,19 +12,19 @@ let dataSet = []
 let tabs = document.querySelector("#id_doctabs");
 
 
+
 $('#id_doctabs').on("open", (event, title) => {
     // Don't open the default dummy tab
     event.preventDefault();
     // Create and open a new custom tab
     {
-        
         let tab = document.createElement("x-doctab");
         tab.innerHTML = "<x-label>"+ title + " - " + tabs.childElementCount + "</x-label>";
         tabs.openTab(tab); 
         tabs.selectTab(tab)
     }
     console.log(event) 
-  });
+});
 
  $(document).ready( ()=> {
     $(document).on('click', '.sidebar-menu .nav-link', (e)=> {
@@ -48,6 +49,11 @@ $('#id_doctabs').on("open", (event, title) => {
             })
     });
 
+    // $('div.split-pane').splitPane();
+    // $('.split-pane-divider').on('click', function () {
+    //     console.log("click");
+    // })
+        
 });
 
 ipc.on('file-path', function (event, path) {
