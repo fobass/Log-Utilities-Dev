@@ -56,6 +56,21 @@ $('#id_doctabs').on("open", (event, title) => {
         
 });
 
+$('#add-folder').on( "click", (e)=> {
+    dialog.showOpenDialog({
+        properties: ['openDirectory']
+        }, function (files) {
+        if (files) {
+            console.log(files);
+            document.getElementById('file-path').value = files
+            filename = files[0]
+            loadAndDisplayContacts()
+            prepareTable()
+        }
+        // event.sender.send('file-path, files')
+        })
+});
+
 ipc.on('file-path', function (event, path) {
     document.getElementById('file-path').innerHTML = path
 })

@@ -21,18 +21,33 @@
 
     <div class="panes-container">
         <div class="left-pane" id="left-pane">
-            <!-- <div class="sidebar-list-content" id="id_list_content">
-              <div class="sidebar-list-content-header">
-               
-               <div class="border d-table w-100">
-                  <p class="d-table-cell">EXPLORER</p>
-                  <div class="d-table-cell tar">
-                    <button id="btn-add-folder">[f]</button>
-                  </div>
+            <nav class="sidebar"> 
+                <div class="logo">	
+                    <img src="" alt="">
                 </div>
-
-              </div>
-            </div> -->
+                <div class="sidebar-menu"> 
+                    <li>
+                      <a class="nav-link" id="Order" href="#"><span class="glyphicon glyphicon-envelope"></span></a>
+                    </li>
+                    <li>
+                      <a class="nav-link" id="Atp" href="#"><span class="glyphicon glyphicon-cog"></span></a>
+                    </li>
+                    <li>
+                      <a class="nav-link" id="Aeed" href="#"><span class="glyphicon glyphicon-film"></span></a>
+                    </li>
+                </div> 
+              </nav>
+          
+          <div class="sidebar-list-content">
+          <div class="exploer-title-label">
+              <h2 title="Explorer (Ctrl+Shift+E)">Explorer</h2>
+          </div>
+          <div class="exploer-title-actions" >
+            <div class="exploer-actions-container" role="toolbar" aria-label="Explorer actions">
+              <div class="btn-add-folder">[]</div>
+            </div>
+          </div>  
+          </div>
 
         </div>
         <div class="panes-separator" id="panes-separator"></div>
@@ -47,22 +62,7 @@
         </div>
     </div>
 
-  	<nav class="sidebar"> 
-      <div class="logo">	
-          <img src="" alt="">
-      </div>
-      <div class="sidebar-menu"> 
-          <li>
-            <a class="nav-link" id="Order" href="#"><span class="glyphicon glyphicon-envelope"></span></a>
-          </li>
-          <li>
-            <a class="nav-link" id="Atp" href="#"><span class="glyphicon glyphicon-cog"></span></a>
-          </li>
-          <li>
-            <a class="nav-link" id="Aeed" href="#"><span class="glyphicon glyphicon-film"></span></a>
-          </li>
-      </div> 
-  	</nav>
+ 
 
     <div class="footer">
     </div>
@@ -121,40 +121,3 @@
 </body>
 </html>
 
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset=utf-8 />
-<title>JS Bin</title>
-<!--[if IE]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<style>
-  .container { 
-    margin: auto;  /* to center the container horizontally */
-    width: 70% /* to take the 70% of the parent element */
-  }
-  #input1 {
-    width: 100%; /* to take the 100% of the parent which is the container div  */
-  }
-  #input2 {
-    float: left; /* to align the control on the left */
-    width:70%; /* to take the 70% of the parent which is the container div  */
-  }
-    #input3 {
-    float: right; /* to align the control to the right */
-    width:29%; /* to take the 29% of the parent which is the container div  */
-  }
-</style>
-</head>
-<body>
-  <div class="container">
-        <div>
-            <input type="text" id="input1" /></div>
-        <div>
-            <input type="text" id="input2" />
-            <input type="button" id="input3" /></div>
-    </div>
-</body>
-</html>

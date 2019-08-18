@@ -1,118 +1,215 @@
-body { 
-    margin:0; 
-    padding:0; 
+
+	  body{
+			font-family:"Open Sans"; 
+			font-size: 0.9em;
+			line-height: 1.8;
+			padding:0;
+			margin:0;
+			background:#eee;
+    }
+    .content {
+			top: 0px;
+      left: 0px;
+      position: relative;
+      /* width: calc(100% - 2px); */
+      width: 100%; 
+      height: calc(100% - 20px);
+      /* border: 3px solid green; */
+			/* padding: 9px 0; */
+      background-color: slategray;
+      overflow-y:auto; 
+      padding-right:9px;
+      /* padding-bottom: 100px; */
   }
-   
-  /* .wrap {
-      width:980px;
-      margin:0 auto;
-  } */
-  .header { 
-      height:140px;
-      margin-bottom:1px;
-      background-color:#0d7963;
-  }
-  .content {
-      width: 100%;
-      height:100%;
-  
-      float:right;
+		.logo img{
+			width:20px;
+			height: 15px;
+      /* margin:0 0 -10px 0px; */
+      padding: 0px;
+      /* background-color: #ccc */
+		}
+		.sidebar {
+      /* position: fixed; */
+      display: flex;
+			top: 0px;
+			left: 0;
+			width: 50px;
+			height: 100%;
+			padding: 0px 0;
+			background-color:#184775;
+    }
+    .sidebar-menu {
+      margin:0; padding-top: 0px;
+      list-style: none;
+      align-content: center;
+    }
+    .sidebar .sidebar-menu a {
+        display: block;
+        text-align: center;
+        padding: 10px;
+        color: #ccc;
+        font-size: 12px;
+    }
+
+    .sidebar .sidebar-menu a .glyphicon {
+      color:#666;
+      font-size:24px;
+      margin-left: 0px;
+    }
+
+    .sidebar .sidebar-menu a:hover .glyphicon {
+      color: white;
+    }
+
+    .sidebar li.active > a .glyphicon {
+      color:white;
+    }
+
+    .sidebar-list-content {
+			position: relative;
+			/* top: 0; */
+			/* left: 50px; */
+			width: 100%;
+			height: 100%;
+			/* padding: 16px 0; */
+			background-color:rgb(228, 80, 54);
+    }
+    .sidebar-list-content-header {
+      background-color: rgb(8, 8, 8);
+      position: fixed;
       left: 50px;
-      position: absolute;
+        /* padding: 0px; */
+      /* width: calc(100% - 20px); */
+      width: 100%;
+      height: 20px;
+      color: white;
+      font-weight: bold;
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+      user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 20px;
+      background-color:#505050;
+      z-index: 8;
+      color: aliceblue;
+    }
+
+  x-doctabs {
+    --open-button-width: 0;
+    --open-button-height: 0;
+    --open-button-margin: 0;
   }
-  .form-group {
-    margin-right: 70px;
-    margin-left: 20px;
-    margin-top: 20px;
-    /* padding-right: 30px; */
-  
-  }
-  .sidebar {
-    background-color: #333;
-    bottom: 0px;
-    left: 0px;
-    position: absolute;
-    top: 0px;
-    width: 50px;
-    z-index: 8;
-    overflow: hidden;
-    -webkit-transition: all 0.1s ease-in-out;
-    -moz-transition: all 0.1s ease-in-out;
-    transition: all 0.1s ease-in-out;
-    border-width: 5px;
-    border-color: red;
-  }
-  .footer {
-    position: fixed;
-    bottom: 0;
+
+.panes-container {
+    display: flex;
     width: 100%;
-    height: 20px;
-    background-color:#505050;
-    z-index: 8;
-    color: aliceblue;
-  }
-  .clear {
-      clear:both;
-  }
+    overflow: hidden;
+}
+
+.left-pane {
+    position: relative;
+    width: 18%;
+    background: #ccc;
+    border:  3px solid green; 
+    height: calc(100% - 20px);
+    display: flex;
+}
+
+.panes-separator {
+    width: 5px;
+    background: rgb(61, 61, 61);
+    position: relative;
+    cursor: col-resize;
+}
+
+.right-pane {
+    flex: auto;
+    background: #eee;
+    height: 100%;
+}
+
+.panes-container,
+.panes-separator {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.exploer-title {
+  display: flex;
+  background-color: #505050;
   
-  .navbar-primary-menu {
-    margin:0; padding:0;
-    list-style: none;
-  }
+}
+
+.exploer-title-label {
+  /* line-height: 35px; */
+  /* position: fixed; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  height: 25px;
+  background-color: #505050;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.exploer-title-label h2 {
+  font-size: 14px;
+  padding: 5px;
+  cursor: default;
+  font-weight: 400;
+  -webkit-margin-before: 0; 
+  -webkit-margin-after: 0; 
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.exploer-title-actions {
+  flex: 1;
+  padding-left: 5px;
+  background-color: aqua;
+  height: 35px;
+  border: 3px solid coral; 
+}
+
+.exploer-actions-container {
+  display: flex;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  justify-content: flex-end;
+}
+.btn-add-folder {
+  float: right;
+  width: 30px;
+  background-color: aliceblue;
+}
+.exploer-title-actions h2 {
   
-  .navbar-primary-menu li a {
-    display: block;
-    padding: 18px 18px;
-    text-align: center;
-    color: #ccc;
-    border-width: 5px;
-  }
+  font-size: 14px;
+  padding: 5px;
+  cursor: default;
+  font-weight: 400;
+  -webkit-margin-before: 0; 
+  -webkit-margin-after: 0; 
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+ 
+
   
-  .navbar-primary-menu li a .glyphicon {
-    color:#666;
-    font-size:25px;
-    margin-left: -5px;
-    border-width: 5px;
-  }
-  
-  .navbar-primary-menu li a:hover .glyphicon {
-    color: white;
-  }
-  
-  .navbar-primary-menu li a:focus .glyphicon {
-    color: white;
-  }
-  
-  .navbar-primary-menu li a::selection .glyphicon {
-    color: white;
-  }
-  .navbar-primary-menu li a::active .glyphicon {
-    background-color: #4CAF50; /* Add a green color to the "active/current" link */
-    color: white;
-  }
-  
-  .my-custom-scrollbar {
-    position: absolute;
-    height: 50%;
-    overflow: auto;
-    margin-right: 70px;
-    margin-left: 0px;
-    margin-top: 20px;
-    }
-    .table-wrapper-scroll-y {
-    display: block;
-    }
-  
-  button {
-  color: rebeccapurple;
-  font-family: sans-serif;
-  font-weight: bold;
-  padding: .5rem;
-  background-color: #ccc;
-  box-shadow: 2px 2px 2px #ccc;
-  display: block;
-  margin: 1em;
-  }
-  textarea {
-  width: 90%;
-  }
