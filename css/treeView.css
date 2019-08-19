@@ -1,5 +1,10 @@
+.panel-body1 {
+    padding-top: 5px;
+    margin: 0px;
+}
 div.panel:first-child {
     margin-top:20px;
+    padding: 0px;
    }
     
    div.treeview {
@@ -66,6 +71,8 @@ div.panel:first-child {
     text-decoration: none;
     color:inherit;
     cursor:pointer;
+    display: fixed;
+    position: relative;
    }
    .treeview li button, .treeview li button:active, .treeview li button:focus {
     text-decoration: none;

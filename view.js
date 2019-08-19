@@ -62,11 +62,27 @@ function loadListOfFiles(dir) {
             logfileslist = logdir.filter((e)=>{
                return path.extname(e).toLowerCase() === logextension
             })
-            for (var logfile of logfilelist.values()){
-                console.log(logfile)   
+            for (var logfile of logfileslist.values()){
+                console.log(logfile) 
+                addTreeViewNode(logfile) 
             }
         })
     }    
 
 }
 
+function addTreeViewNode(filename){
+    var ul = document.getElementById("file-treeview-ul");
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    li.setAttribute('style', "display: list-item;")
+    a.textContent = filename;
+    a.setAttribute('href', "#");
+    li.appendChild(a);
+    ul.appendChild(li);
+    // var node = '<li><a href="#">ATP</a> <ul> <li></li> </ul>'
+    // let tab = document.createElement("x-doctab");
+
+//    document.getElementById('file-treeview').appendChild(ul)
+
+}
