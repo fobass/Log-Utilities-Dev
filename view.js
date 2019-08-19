@@ -3,6 +3,7 @@ let $ = require('jquery')
 const ipc = require('electron').ipcRenderer
 const dialog = require('electron').remote.dialog
 const selectDirBtn = document.getElementById('select-directory')
+var path = require('path');
 
 require('datatables.net')();
 let fs = require('fs')
@@ -11,6 +12,8 @@ let sno = 0
 let dataSet = []
 let tabs = document.querySelector("#id_doctabs");
 
+const logextension = ".log"
+var logfileslist
 
 
 $('#id_doctabs').on("open", (event, title) => {
@@ -32,42 +35,15 @@ $('#id_doctabs').on("open", (event, title) => {
         $(e.currentTarget).parent('li').addClass("active");
         
         $(tabs).trigger("open", [e.currentTarget.id] )
-    });
-
-    $(document).on( "click", '#load-file' , (e)=> {
-        dialog.showOpenDialog({
-            properties: ['openFile']
-            }, function (files) {
-            if (files) {
-                console.log(files);
-                document.getElementById('file-path').value = files
-                filename = files[0]
-                loadAndDisplayContacts()
-                prepareTable()
-            }
-            // event.sender.send('file-path, files')
-            })
-    });
-
-    // $('div.split-pane').splitPane();
-    // $('.split-pane-divider').on('click', function () {
-    //     console.log("click");
-    // })
-        
+    });        
 });
 
 $('#add-folder').on( "click", (e)=> {
-    dialog.showOpenDialog({
-        properties: ['openDirectory']
-        }, function (files) {
-        if (files) {
-            console.log(files);
-            document.getElementById('file-path').value = files
-            filename = files[0]
-            loadAndDisplayContacts()
-            prepareTable()
+    dialog.showOpenDialog({properties: ['openDirectory']}, (dir)=> {
+        if (dir) {
+            console.log(dir[0]);
+            loadListOfFiles(dir[0])
         }
-        // event.sender.send('file-path, files')
         })
 });
 
@@ -80,77 +56,17 @@ window.addEventListener('contextmenu', (event)=>{
     ipc.send('show-context-menu')
 })
 
-$('#sendIPCSync').on('click', ()=> {
-    const reply = ipc.sendSync('somemsg', "Hello world")
-    const msg = `Sync message reply: ${reply} - ${sno++}`
-    console.log(reply)
-    document.getElementById('respICPSync').innerHTML = msg
-})
-
-$('#sendIPCAsync').on('click', ()=> {
-    const reply = ipc.send('asynchronous-message', 'That one small step for man')
-    const msg = `Async message reply: ${reply} - ${sno++}`
-    console.log(reply)
-    document.getElementById('respICPAsync').innerHTML = msg
-    
-})
-
-function addEntry(LogDt, SourceID, OrderDateTime, TicketNo) {
-    if (LogDt && SourceID && OrderDateTime && TicketNo) {
-        sno++
-        let updateString = '<tr><td>' + LogDt + '</td><td>' + SourceID + '</td><td>' +
-            OrderDateTime + '</td></tr>' + TicketNo + '</td></tr>'
-        $('#data-table').append(updateString)
-    }
-}
-
-function prepareTable(){
-    $(document).ready(function () {
-        $('#data-table').DataTable({
-           "scrollX": true,
-            "scrollY": "70vh",
-            "scrollCollapse": true,
-            data : dataSet,
-            columns: [
-                { title: 'LogDt' },
-                { title: 'SourceID' },
-                { title: 'OrderDateTime'},
-                { title: 'TicketNo'},
-                { title: 'TicketNo'},
-                { title: 'TicketNo'},
-            ]
-        });
-    $('.dataTables_length').addClass('bs-select');
-    });
-}
-
-function updateTableData(data){
-    if (data){
-        data.forEach((ticketLog, index) => {
-            let [LogDt, Space, SourceID, OrderDateTime, TicketNo, m, s] = ticketLog.split('|')
-            let v = [LogDt, SourceID, OrderDateTime, TicketNo, m, s]
-            dataSet.push(v)
+function loadListOfFiles(dir) {
+    if (dir) {
+        fs.readdir(dir, (err, logdir)=>{
+            logfileslist = logdir.filter((e)=>{
+               return path.extname(e).toLowerCase() === logextension
+            })
+            for (var logfile of logfilelist.values()){
+                console.log(logfile)   
+            }
         })
-    }
-}
+    }    
 
-function loadAndDisplayContacts() {
-
-    //Check if file exists
-    if (fs.existsSync(filename)) {
-        let data = fs.readFileSync(filename, 'utf8').split('\n')
-        updateTableData(data)
-        // data.forEach((ticketLog, index) => {
-        //     let [LogDt, Space, SourceID, OrderDateTime, TicketNo] = ticketLog.split('|')
-        //     addEntry(LogDt, SourceID, OrderDateTime, TicketNo)
-        // })
-
-    } else {
-        console.log("File Doesn\'t Exist. Creating new file.")
-        fs.writeFile(filename, '', (err) => {
-            if (err)
-                console.log(err)
-        })
-    }
 }
 

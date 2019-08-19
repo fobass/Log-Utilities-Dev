@@ -10,6 +10,7 @@
   <script src="./custom_modules/simpledrag.js"></script>
 
   <link type="text/css" rel="stylesheet" href="./css/styles.css">
+  <link type="text/css" rel="stylesheet" href="./css/treeView.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="./node_modules/xel/themes/material.css">
@@ -39,18 +40,57 @@
               </nav>
           
           <div class="sidebar-list-content">
-          <!-- <div class="exploer-title-label">
-              <h2 title="Explorer (Ctrl+Shift+E)">Explorer</h2>
-          </div> -->
-          <div class="exploer-title-actions" >
-            <div class="exploer-actions-container" role="toolbar" aria-label="Explorer actions">
 
-              <h2 title="Explorer (Ctrl+Shift+E)">Explorer</h2>
-              <a class="btn-add-folder" id="add-folder" >
+            <div class="exploer-title-actions" >
+              <div class="exploer-actions-container" role="toolbar" aria-label="Explorer actions">
+                <h2 title="Explorer (Ctrl+Shift+E)">Explorer</h2>
+                <a class="btn-add-folder" id="add-folder" >
                   <img id="add-folder" src="./images/add-file-2.png" alt="Add folder" width="22" height="22">
-              </a>
-            </div>
-          </div>  
+                </a>
+              </div>
+            </div>  
+
+            <div class="panel-body">
+              <ul class="treeview">
+                  <li><a href="#">Tree</a>
+                    <ul>
+                    <li><a href="#">Branch</a></li>
+                    <li><a href="#">Branch</a>
+                      <ul>
+                        <li><a href="#">Stick</a></li>
+                        <li><a href="#">Stick</a></li>
+                        <li><a href="#">Stick</a>
+                          <ul>
+                            <li><a href="#">Twig</a></li>
+                            <li><a href="#">Twig</a></li>
+                            <li><a href="#">Twig</a></li>
+                            <li><a href="#">Twig</a>
+                              <ul>
+                                <li><a href="#">Leaf</a></li>
+                                <li><a href="#">Leaf</a></li>
+                                <li><a href="#">Leaf</a></li>
+                                <li><a href="#">Leaf</a></li>
+                                <li><a href="#">Leaf</a></li>
+                                <li><a href="#">Leaf</a></li>
+                                <li><a href="#">Leaf</a></li>
+                                <li><a href="#">Leaf</a></li>
+                                <li><a href="#">Leaf</a></li>
+                              </ul>
+                            </li>
+                            <li><a href="#">Twig</a></li>
+                            <li><a href="#">Twig</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="#">Stick</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">Branch</a></li>
+                    <li><a href="#">Branch</a></li>
+                  </ul>
+                </li>
+              </ul>
+          </div>
+
           </div>
 
         </div>
@@ -119,7 +159,16 @@
   
       }, null, 'horizontal');
   
-  
+      //TreeView
+        var toggler = document.getElementsByClassName("caret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+          toggler[i].addEventListener("click", function () {
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+          });
+        }
   </script>
 
 </body>
