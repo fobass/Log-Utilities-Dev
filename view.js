@@ -72,10 +72,22 @@ function loadListOfFiles(dir) {
 }
 
 function addTreeViewNode(filename){
+
     var ul = document.getElementById("file-treeview-ul");
     var li = document.createElement("li");
     var a = document.createElement("a");
-    li.setAttribute('style', "display: list-item;")
+    var elements = document.getElementsByClassName("tree-branch")
+    console.log(elements)
+    // var cl = document.createElement("tree-indicator glyphicon-chevron-down")
+    elements[0].childNodes[0].className = "tree-indicator glyphicon glyphicon-chevron-down"
+    // elements[0].removeChild(elements[0].childNodes[0]);
+    // elements[0].appendChild(cl)
+    // elements.removeChild(elements.childNodes[0]);  
+    // for (var i = 0; i>elements.length; i++) {
+    //     elements[i].classList.remove('tree-indicator glyphicon glyphicon-chevron-right')
+    //     elements[i].classList.add('tree-indicator glyphicon-chevron-down')
+    //  }
+
     a.textContent = filename;
     a.setAttribute('href', "#");
     li.appendChild(a);
