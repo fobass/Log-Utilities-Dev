@@ -25,11 +25,11 @@ $('#id_doctabs').on("open", (event, title) => {
     // Create and open a new custom tab
     var existTab = document.getElementById(title + "_tab")
     if (existTab) {
-        existTab.selected = true
         tabs.selectTab(existTab)
     } else {
         let tab = document.createElement("x-doctab");
-        tab.innerHTML = "<x-label id="+title + "_tab>"+ title + "</x-label>"
+        tab.setAttribute("id",title + "_tab")
+        tab.innerHTML = "<x-label>"+ title + "</x-label>"
         tabs.openTab(tab); 
         tabs.selectTab(tab)
         
