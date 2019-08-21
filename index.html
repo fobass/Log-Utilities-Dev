@@ -8,12 +8,15 @@
   <script src="./node_modules/jquery/dist/jquery.js"></script>
   <script src="./node_modules/xel/xel.min.js"></script>
   <script src="./custom_modules/simpledrag.js"></script>
+  <script src="./node_modules/jstree/dist/jstree.js"></script>
+  
 
   <link type="text/css" rel="stylesheet" href="./css/styles.css">
   <link type="text/css" rel="stylesheet" href="./css/treeView.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="./node_modules/xel/themes/material.css">
+  <link rel="stylesheet" href="./node_modules/jstree/dist/themes/default/style.min.css" />
 
 
 </head>
@@ -50,19 +53,25 @@
               </div>
             </div>  
 
-            <div class="panel-body1">
-              <ul class="treeview" id="file-treeview">
-                  <li>
-                    <!-- <a href="#">ATP</a> -->
-                    <ul id="file-treeview-ul">
-                      <!-- <li><a href="#">Branch</a></li>               
-                      <li><a href="#">Branch</a></li>
-                      <li><a href="#">Branch</a></li> -->
-                    </ul>
+          <div class="exploer-treeview" id="jstree">
+              <!-- <ul>
+                  <li id="phtml_1">
+                    <a href="#">Root node 1</a>              
                   </li>
-              </ul>
+                </ul> -->
+              
+            <!-- in this example the tree is populated from inline HTML -->
+            <!-- <ul id="root-node">
+              <li>Root node 1
+                <ul>
+                  <li id="child_node_1">Child node 1</li>
+                  <li>Child node 2</li>
+                </ul>
+              </li>
+              <li>Root node 2</li>
+            </ul> -->
           </div>
-
+          
           </div>
 
         </div>
@@ -143,8 +152,9 @@
         }
         // end treeview
 
-        $.fn.extend({
-    treeview: function() {
+
+
+        $.fn.extend({treeview: function() {
         return this.each(function() {
             // Initialize the top levels;
             var tree = $(this);         

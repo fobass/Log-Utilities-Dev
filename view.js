@@ -11,6 +11,9 @@ let filename = '2018-11-13_Ticket.log'
 let sno = 0
 let dataSet = []
 let tabs = document.querySelector("#id_doctabs");
+var Root_node
+var Root_li
+var ul 
 
 const logextension = ".log"
 var logfileslist
@@ -62,10 +65,32 @@ function loadListOfFiles(dir) {
             logfileslist = logdir.filter((e)=>{
                return path.extname(e).toLowerCase() === logextension
             })
-            for (var logfile of logfileslist.values()){
-                console.log(logfile) 
-                addTreeViewNode(logfile) 
-            }
+            // Root_node = document.createElement("ul");
+            // Root_node.setAttribute('class','jstree-container-ul jstree-children')
+            // Root_node.setAttribute('role', 'group')
+
+            // Root_li = document.createElement("li");
+            // Root_li.setAttribute('role', 'treeitem')
+            // Root_li.setAttribute('arial-selected', 'false')
+            // Root_li.setAttribute('arial-level', '1')
+            // Root_li.setAttribute('aria-labelledby', 'j1_1_anchor')
+            // Root_li.setAttribute('class', 'jstree-node  jstree-closed')
+            // Root_li.textContent = "ATP";
+            // ul = document.createElement("ul");
+            // $("#jstree").jstree("create",-1,false,logfile,false,true); 
+            $('#jstree').jstree().create_node('#' ,  { "id" : "ajson5", "text" : "ATP" }, "last", function(){
+                for (var logfile of logfileslist.values()){
+                    console.log(logfile) 
+                    // addTreeViewNode(logfile) 
+                    $("#jstree").jstree().create_node('ajson5', { "id" : logfile, "text" : logfile, "icon": "glyphicon glyphicon-leaf" },"last", ()=>{
+                        this.set_icon(this, './images/logo.png')
+                    });
+                }
+             }); 
+            
+            // Root_li.appendChild(ul)    
+            // Root_node.appendChild(Root_li)
+            // document.getElementById('jstree').appendChild(Root_node)
         })
     }    
 
@@ -73,13 +98,27 @@ function loadListOfFiles(dir) {
 
 function addTreeViewNode(filename){
 
-    var ul = document.getElementById("file-treeview-ul");
-    var li = document.createElement("li");
-    var a = document.createElement("a");
-    var elements = document.getElementsByClassName("tree-branch")
-    console.log(elements)
+//     <ul id="Root_node">
+//     <li>Root node 1
+//       <ul>
+//         <li id="child_node_1">Child node 1</li>
+//         <li>Child node 2</li>
+//       </ul>
+//     </li>
+//     <li>Root node 2</li>
+//   </ul>
+    // $("#jstree").jstree("create")
+    $("#jstree").jstree("create",-1,false, filename ,false,true);
+
+
+    // var li = document.createElement("li");
+    // li.textContent = filename
+    // ul.appendChild(li)    
+   
+    // var elements = document.getElementsByClassName("tree-branch")
+    // console.log(elements)
     // var cl = document.createElement("tree-indicator glyphicon-chevron-down")
-    elements[0].childNodes[0].className = "tree-indicator glyphicon glyphicon-chevron-down"
+    // elements[0].childNodes[0].className = "tree-indicator glyphicon glyphicon-chevron-down"
     // elements[0].removeChild(elements[0].childNodes[0]);
     // elements[0].appendChild(cl)
     // elements.removeChild(elements.childNodes[0]);  
@@ -88,13 +127,37 @@ function addTreeViewNode(filename){
     //     elements[i].classList.add('tree-indicator glyphicon-chevron-down')
     //  }
 
-    a.textContent = filename;
-    a.setAttribute('href', "#");
-    li.appendChild(a);
-    ul.appendChild(li);
+    // a.textContent = filename;
+    // a.setAttribute('href', "#");
+    // li.appendChild(a);
+    // ul.appendChild(li);
     // var node = '<li><a href="#">ATP</a> <ul> <li></li> </ul>'
     // let tab = document.createElement("x-doctab");
 
 //    document.getElementById('file-treeview').appendChild(ul)
 
 }
+
+
+$(function () {
+    // 6 create an instance when the DOM is ready
+    // $('#jstree').jstree();
+    $("#jstree").jstree({
+
+		"core" : { "check_callback" : true },
+		"plugins" : [ "themes", "html_data", "ui", "crrm" ]
+    });
+    // 7 bind to events triggered on the tree
+    $('#jstree').on("changed.jstree", function (e, data) {
+      console.log(data.selected);
+    });
+    // 8 interact with the tree - either way is OK
+    $('button').on('click', function () {
+      $('#jstree').jstree(true).select_node('child_node_1');
+      $('#jstree').jstree('select_node', 'child_node_1');
+      $.jstree.reference('#jstree').select_node('child_node_1');
+    });
+
+
+        
+  });

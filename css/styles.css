@@ -231,6 +231,13 @@
   background-color: red;
 }
 
+.exploer-treeview {
+  padding: 5px;
+  background-color: rgb(240, 35, 35);
+  height: calc(100% - 27px);
+  /* border: 3px solid coral;  */
+  
+}
  
 
   
