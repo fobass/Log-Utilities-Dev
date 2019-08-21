@@ -23,11 +23,16 @@ $('#id_doctabs').on("open", (event, title) => {
     // Don't open the default dummy tab
     event.preventDefault();
     // Create and open a new custom tab
-    {
+    var existTab = document.getElementById(title + "_tab")
+    if (existTab) {
+        existTab.selected = true
+        tabs.selectTab(existTab)
+    } else {
         let tab = document.createElement("x-doctab");
-        tab.innerHTML = "<x-label>"+ title + " - " + tabs.childElementCount + "</x-label>";
+        tab.innerHTML = "<x-label id="+title + "_tab>"+ title + "</x-label>"
         tabs.openTab(tab); 
         tabs.selectTab(tab)
+        
     }
     console.log(event) 
 });
@@ -37,14 +42,13 @@ $('#id_doctabs').on("open", (event, title) => {
         $(".sidebar-menu").find("li.active").removeClass("active");
         $(e.currentTarget).parent('li').addClass("active");
         
-        $(tabs).trigger("open", [e.currentTarget.id] )
+       
     });        
 });
 
 $('#add-folder').on( "click", (e)=> {
     dialog.showOpenDialog({properties: ['openDirectory']}, (dir)=> {
         if (dir) {
-            console.log(dir[0]);
             loadListOfFiles(dir[0])
         }
         })
@@ -59,25 +63,22 @@ window.addEventListener('contextmenu', (event)=>{
     ipc.send('show-context-menu')
 })
 
+$('#jstree').on('changed.jstree', function (e, data) {
+    var i, j, r = [];
+    for(i = 0, j = data.selected.length; i < j; i++) {
+      r.push(data.instance.get_node(data.selected[i]).text);
+      console.log(data.selected[i]);
+    }
+    // if $(tab).pa
+     $(tabs).trigger("open", [r] )
+  })
+
 function loadListOfFiles(dir) {
     if (dir) {
         fs.readdir(dir, (err, logdir)=>{
             logfileslist = logdir.filter((e)=>{
                return path.extname(e).toLowerCase() === logextension
             })
-            // Root_node = document.createElement("ul");
-            // Root_node.setAttribute('class','jstree-container-ul jstree-children')
-            // Root_node.setAttribute('role', 'group')
-
-            // Root_li = document.createElement("li");
-            // Root_li.setAttribute('role', 'treeitem')
-            // Root_li.setAttribute('arial-selected', 'false')
-            // Root_li.setAttribute('arial-level', '1')
-            // Root_li.setAttribute('aria-labelledby', 'j1_1_anchor')
-            // Root_li.setAttribute('class', 'jstree-node  jstree-closed')
-            // Root_li.textContent = "ATP";
-            // ul = document.createElement("ul");
-            // $("#jstree").jstree("create",-1,false,logfile,false,true); 
             $('#jstree').jstree().create_node('#' ,  { "id" : "ajson5", "text" : "ATP" }, "last", function(){
                 for (var logfile of logfileslist.values()){
                     console.log(logfile) 
@@ -87,65 +88,21 @@ function loadListOfFiles(dir) {
                     });
                 }
              }); 
-            
-            // Root_li.appendChild(ul)    
-            // Root_node.appendChild(Root_li)
-            // document.getElementById('jstree').appendChild(Root_node)
         })
     }    
 
 }
 
 function addTreeViewNode(filename){
-
-//     <ul id="Root_node">
-//     <li>Root node 1
-//       <ul>
-//         <li id="child_node_1">Child node 1</li>
-//         <li>Child node 2</li>
-//       </ul>
-//     </li>
-//     <li>Root node 2</li>
-//   </ul>
-    // $("#jstree").jstree("create")
     $("#jstree").jstree("create",-1,false, filename ,false,true);
-
-
-    // var li = document.createElement("li");
-    // li.textContent = filename
-    // ul.appendChild(li)    
-   
-    // var elements = document.getElementsByClassName("tree-branch")
-    // console.log(elements)
-    // var cl = document.createElement("tree-indicator glyphicon-chevron-down")
-    // elements[0].childNodes[0].className = "tree-indicator glyphicon glyphicon-chevron-down"
-    // elements[0].removeChild(elements[0].childNodes[0]);
-    // elements[0].appendChild(cl)
-    // elements.removeChild(elements.childNodes[0]);  
-    // for (var i = 0; i>elements.length; i++) {
-    //     elements[i].classList.remove('tree-indicator glyphicon glyphicon-chevron-right')
-    //     elements[i].classList.add('tree-indicator glyphicon-chevron-down')
-    //  }
-
-    // a.textContent = filename;
-    // a.setAttribute('href', "#");
-    // li.appendChild(a);
-    // ul.appendChild(li);
-    // var node = '<li><a href="#">ATP</a> <ul> <li></li> </ul>'
-    // let tab = document.createElement("x-doctab");
-
-//    document.getElementById('file-treeview').appendChild(ul)
-
 }
 
 
 $(function () {
-    // 6 create an instance when the DOM is ready
-    // $('#jstree').jstree();
     $("#jstree").jstree({
 
-		"core" : { "check_callback" : true },
-		"plugins" : [ "themes", "html_data", "ui", "crrm" ]
+		"core" : { "check_callback" : true, "animation" : 0 },
+		"plugins" : [ "themes", "html_data", "ui", "crrm", "wholerow" ]
     });
     // 7 bind to events triggered on the tree
     $('#jstree').on("changed.jstree", function (e, data) {
@@ -157,7 +114,5 @@ $(function () {
       $('#jstree').jstree('select_node', 'child_node_1');
       $.jstree.reference('#jstree').select_node('child_node_1');
     });
-
-
         
   });
