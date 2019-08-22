@@ -32,18 +32,22 @@ $('#id_doctabs').on("open", (event, title) => {
         tab.innerHTML = "<x-label>"+ title + "</x-label>"
         tabs.openTab(tab); 
         tabs.selectTab(tab)
-        
     }
-    console.log(event) 
+
 });
+
+tabs.addEventListener("select", (event) => {
+    $('#jstree').jstree('deselect_all');
+    $('#jstree').jstree('select_node', event.detail.innerText);
+
+  });
 
  $(document).ready( ()=> {
     $(document).on('click', '.sidebar-menu .nav-link', (e)=> {
         $(".sidebar-menu").find("li.active").removeClass("active");
         $(e.currentTarget).parent('li').addClass("active");
-        
-       
-    });        
+    }); 
+
 });
 
 $('#add-folder').on( "click", (e)=> {
@@ -51,27 +55,30 @@ $('#add-folder').on( "click", (e)=> {
         if (dir) {
             loadListOfFiles(dir[0])
         }
-        })
+    })
+
 });
 
 ipc.on('file-path', function (event, path) {
     document.getElementById('file-path').innerHTML = path
+    
 })
 
 window.addEventListener('contextmenu', (event)=>{
     event.preventDefault()
     ipc.send('show-context-menu')
+
 })
 
-$('#jstree').on('changed.jstree', function (e, data) {
-    var i, j, r = [];
-    for(i = 0, j = data.selected.length; i < j; i++) {
-      r.push(data.instance.get_node(data.selected[i]).text);
-      console.log(data.selected[i]);
-    }
-    // if $(tab).pa
-     $(tabs).trigger("open", [r] )
-  })
+// $('#jstree').on('changed.jstree', function (e, data) {
+//     var i, j, r = [];
+//     for(i = 0, j = data.selected.length; i < j; i++) {
+//       r.push(data.instance.get_node(data.selected[i]).text);
+//       console.log(data.selected[i]);
+//     }
+//     // if $(tab).pa
+//      $(tabs).trigger("open", [r] )
+//   })
 
 function loadListOfFiles(dir) {
     if (dir) {
@@ -95,18 +102,26 @@ function loadListOfFiles(dir) {
 
 function addTreeViewNode(filename){
     $("#jstree").jstree("create",-1,false, filename ,false,true);
+
 }
 
 
 $(function () {
     $("#jstree").jstree({
-
 		"core" : { "check_callback" : true, "animation" : 0 },
-		"plugins" : [ "themes", "html_data", "ui", "crrm", "wholerow" ]
+		"plugins" : [ "themes", "html_data", "ui", "crrm", "wholerow", "changed" ]
     });
     // 7 bind to events triggered on the tree
     $('#jstree').on("changed.jstree", function (e, data) {
-      console.log(data.selected);
+        if (data.action != "deselect_all") {
+            var count = 0, i, j, r = [];
+            for(i = 0, j = data.selected.length; i < j; i++) {
+                r.push(data.instance.get_node(data.selected[i]).text);
+                console.log(data.selected[i]);
+                count = i
+            }
+            $(tabs).trigger("open", [data.selected[count]] )
+        }
     });
     // 8 interact with the tree - either way is OK
     $('button').on('click', function () {
