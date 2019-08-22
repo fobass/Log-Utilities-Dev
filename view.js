@@ -7,13 +7,9 @@ var path = require('path');
 
 require('datatables.net')();
 let fs = require('fs')
-let filename = '2018-11-13_Ticket.log'
-let sno = 0
-let dataSet = []
+
 let tabs = document.querySelector("#id_doctabs");
-var Root_node
-var Root_li
-var ul 
+
 
 const logextension = ".log"
 var logfileslist
@@ -100,20 +96,15 @@ function loadListOfFiles(dir) {
 
 }
 
-function addTreeViewNode(filename){
-    $("#jstree").jstree("create",-1,false, filename ,false,true);
-
-}
-
 
 $(function () {
     $("#jstree").jstree({
 		"core" : { "check_callback" : true, "animation" : 0 },
-		"plugins" : [ "themes", "html_data", "ui", "crrm", "wholerow", "changed" ]
+		"plugins" : [ "themes", "html_data", "ui", "crrm", "wholerow", "changed", "dnd" ]
     });
     // 7 bind to events triggered on the tree
     $('#jstree').on("changed.jstree", function (e, data) {
-        if (data.action != "deselect_all") {
+        if (data.action == "select_node" && data.event.ctrlKey != true && data.event.shiftKey != true) {
             var count = 0, i, j, r = [];
             for(i = 0, j = data.selected.length; i < j; i++) {
                 r.push(data.instance.get_node(data.selected[i]).text);
