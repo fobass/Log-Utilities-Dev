@@ -233,7 +233,8 @@
 
 .exploer-treeview {
   padding: 5px;
-  background-color: rgb(240, 35, 35);
+  /* display: flex; */
+  background-color: #2D2D30;
   height: calc(100% - 27px);
   /* border: 3px solid coral;  */
   -webkit-touch-callout: none; /* iOS Safari */
@@ -242,7 +243,10 @@
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-  
+  color: #BCBCBC;
+}
+.white {
+  color: rgb(219, 219, 223);
 }
  
 

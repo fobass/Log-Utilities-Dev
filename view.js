@@ -66,27 +66,38 @@ window.addEventListener('contextmenu', (event)=>{
 
 })
 
-// $('#jstree').on('changed.jstree', function (e, data) {
-//     var i, j, r = [];
-//     for(i = 0, j = data.selected.length; i < j; i++) {
-//       r.push(data.instance.get_node(data.selected[i]).text);
-//       console.log(data.selected[i]);
-//     }
-//     // if $(tab).pa
-//      $(tabs).trigger("open", [r] )
-//   })
+$('#jstree').on('close_all.jstree', function (e, data) {
+    var i, j, r = [];
+    for(i = 0, j = data.selected.length; i < j; i++) {
+      r.push(data.instance.get_node(data.selected[i]).text);
+      console.log(data.selected[i]);
+    }
+    // if $(tab).pa
+     $(tabs).trigger("open", [r] )
+  })
+
+$('#jstree').on('after_close.jstree', function (e, data) {
+    $('#jstree').jstree(true).set_icon(data.node, "glyphicon glyphicon-folder-close white");
+
+  })
+
+$('#jstree').on('after_open.jstree', function (e, data) {
+    $('#jstree').jstree(true).set_icon(data.node, "glyphicon glyphicon-folder-open white");
+    
+  })
 
 function loadListOfFiles(dir) {
     if (dir) {
+        var dir_name = dir.substring(dir.lastIndexOf('\\') + 1, dir.length)
         fs.readdir(dir, (err, logdir)=>{
             logfileslist = logdir.filter((e)=>{
                return path.extname(e).toLowerCase() === logextension
             })
-            $('#jstree').jstree().create_node('#' ,  { "id" : "ajson5", "text" : "ATP" }, "last", function(){
+            $('#jstree').jstree().create_node('#' ,  { "id" : dir_name, "text" : dir_name, "icon" : "glyphicon glyphicon-folder-close white" }, "last", function(){
                 for (var logfile of logfileslist.values()){
                     console.log(logfile) 
                     // addTreeViewNode(logfile) 
-                    $("#jstree").jstree().create_node('ajson5', { "id" : logfile, "text" : logfile, "icon": "glyphicon glyphicon-leaf" },"last", ()=>{
+                    $("#jstree").jstree().create_node(dir_name, { "id" : logfile, "text" : logfile, "icon": "glyphicon glyphicon-file white" },"last", ()=>{
                         this.set_icon(this, './images/logo.png')
                     });
                 }
@@ -99,12 +110,12 @@ function loadListOfFiles(dir) {
 
 $(function () {
     $("#jstree").jstree({
-		"core" : { "check_callback" : true, "animation" : 0 },
-		"plugins" : [ "themes", "html_data", "ui", "crrm", "wholerow", "changed", "dnd" ]
+		"core" : { "check_callback" : true, "animation" : 0, "themes" : { "stripes" : true } },
+		"plugins" : [ "themes", "html_data", "ui", "crrm", "wholerow", "changed" ]
     });
     // 7 bind to events triggered on the tree
     $('#jstree').on("changed.jstree", function (e, data) {
-        if (data.action == "select_node" && data.event.ctrlKey != true && data.event.shiftKey != true) {
+        if (data.selected[0] != "ajson5" && data.action == "select_node" && data.event.ctrlKey != true && data.event.shiftKey != true) {
             var count = 0, i, j, r = [];
             for(i = 0, j = data.selected.length; i < j; i++) {
                 r.push(data.instance.get_node(data.selected[i]).text);
@@ -114,6 +125,13 @@ $(function () {
             $(tabs).trigger("open", [data.selected[count]] )
         }
     });
+
+    // $('#jstree').jstree('closed_node')
+    $('#jstree').on('closed_node.jstree', function (e, data) {
+            console.log(data.selected[i]);
+
+    }); 
+
     // 8 interact with the tree - either way is OK
     $('button').on('click', function () {
       $('#jstree').jstree(true).select_node('child_node_1');
