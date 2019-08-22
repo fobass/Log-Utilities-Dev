@@ -89,19 +89,19 @@ $('#jstree').on('after_open.jstree', function (e, data) {
 function loadListOfFiles(dir) {
     if (dir) {
         var dir_name = dir.substring(dir.lastIndexOf('\\') + 1, dir.length)
-        fs.readdir(dir, (err, logdir)=>{
+        fs.readdir(dir, (err, logdir)=> {
             logfileslist = logdir.filter((e)=>{
                return path.extname(e).toLowerCase() === logextension
             })
-            $('#jstree').jstree().create_node('#' ,  { "id" : dir_name, "text" : dir_name, "icon" : "glyphicon glyphicon-folder-close white" }, "last", function(){
-                for (var logfile of logfileslist.values()){
-                    console.log(logfile) 
-                    // addTreeViewNode(logfile) 
-                    $("#jstree").jstree().create_node(dir_name, { "id" : logfile, "text" : logfile, "icon": "glyphicon glyphicon-file white" },"last", ()=>{
-                        this.set_icon(this, './images/logo.png')
-                    });
-                }
-             }); 
+            if (logfileslist.length > 0) {
+                $('#jstree').jstree().create_node('#' ,  { "id" : dir_name, "text" : dir_name, "icon" : "glyphicon glyphicon-folder-close white" }, "last", function(){
+                    for (var logfile of logfileslist.values()){
+                        $("#jstree").jstree().create_node(dir_name, { "id" : logfile, "text" : logfile, "icon": "glyphicon glyphicon-file white" },"last", ()=>{
+                            this.set_icon(this, './images/logo.png')
+                        });
+                    }
+                });
+            } 
         })
     }    
 
