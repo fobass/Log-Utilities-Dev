@@ -28,6 +28,12 @@ $('#id_doctabs').on("open", (event, title) => {
         tab.innerHTML = "<x-label>"+ title + "</x-label>"
         tabs.openTab(tab); 
         tabs.selectTab(tab)
+        // var content = document.getElementById("id_content")
+        //     let tab_content = document.createElement("main");
+        //     tab_content.setAttribute("id", title + "_tab_content")
+        //     tab_content.textContent = title + "_tab_content"
+        // //  content.innerHTML = "<x-box id="+ title +"_tab_content>Content of  "+ title +"</x-box>"
+        // content.appendChild(tab_content)
     }
 
 });
@@ -93,11 +99,12 @@ function loadListOfFiles(dir) {
             logfileslist = logdir.filter((e)=>{
                return path.extname(e).toLowerCase() === logextension
             })
-            if (logfileslist.length > 0) {
+            if (logfileslist.length > 0 && dirlist.indexOf(dir_name) == -1) {
                 dirlist.push(dir_name)
                 $('#jstree').jstree().create_node('#' ,  { "id" : dir_name, "text" : dir_name, "icon" : "glyphicon glyphicon-folder-close white" }, "last", function(){
                     for (var logfile of logfileslist.values()){
-                        $("#jstree").jstree().create_node(dir_name, { "id" : logfile, "text" : logfile, "icon": "glyphicon glyphicon-file white" },"last", ()=>{
+                        var text = logfile.substring(logfile.lastIndexOf('_') + 1, logfile.length)
+                        $("#jstree").jstree().create_node(dir_name, { "id" : logfile, "text" : text, "icon": "glyphicon glyphicon-file white" },"last", ()=>{
                             this.set_icon(this, './images/logo.png')
                         });
                     }
@@ -116,14 +123,16 @@ $(function () {
     });
     // 7 bind to events triggered on the tree
     $('#jstree').on("changed.jstree", function (e, data) {
-        if (dirlist.indexOf(data.selected[0]) == -1 && data.action == "select_node" && data.event.ctrlKey != true && data.event.shiftKey != true) {
-            var count = 0, i, j, r = [];
-            for(i = 0, j = data.selected.length; i < j; i++) {
-                r.push(data.instance.get_node(data.selected[i]).text);
-                console.log(data.selected[i]);
-                count = i
-            }
-            $(tabs).trigger("open", [data.selected[count]] )
+        if (dirlist.indexOf(data.selected[0]) == -1 && data.action == "select_node") {
+            // if (data.event.ctrlKey != true && data.event.shiftKey != true) {
+                var count = 0, i, j, r = [];
+                for(i = 0, j = data.selected.length; i < j; i++) {
+                    r.push(data.instance.get_node(data.selected[i]).text);
+                    console.log(data.selected[i]);
+                    count = i
+                }
+                $(tabs).trigger("open", [data.selected[count]] )
+            // }
         }
     });
 

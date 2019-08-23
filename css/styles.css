@@ -126,7 +126,7 @@
 }
 
 .panes-separator {
-    width: 5px;
+    width: 3px;
     background: rgb(61, 61, 61);
     position: relative;
     cursor: col-resize;
@@ -232,7 +232,7 @@
 }
 
 .exploer-treeview {
-  padding: 5px;
+  /* padding: 5px; */
   /* display: flex; */
   background-color: #2D2D30;
   height: calc(100% - 27px);
@@ -244,10 +244,16 @@
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
   color: #BCBCBC;
+  overflow: auto; 
+  display: grid;
 }
 .white {
   color: rgb(219, 219, 223);
 }
- 
+ x-box{
+   height: 100%;
+   width: 100%;
+   background-color: #184775;
+ }
 
   
