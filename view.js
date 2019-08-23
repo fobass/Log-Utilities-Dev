@@ -10,9 +10,9 @@ let fs = require('fs')
 
 let tabs = document.querySelector("#id_doctabs");
 
-
 const logextension = ".log"
 var logfileslist
+var dirlist = []
 
 
 $('#id_doctabs').on("open", (event, title) => {
@@ -36,9 +36,9 @@ tabs.addEventListener("select", (event) => {
     $('#jstree').jstree('deselect_all');
     $('#jstree').jstree('select_node', event.detail.innerText);
 
-  });
+});
 
- $(document).ready( ()=> {
+$(document).ready( ()=> {
     $(document).on('click', '.sidebar-menu .nav-link', (e)=> {
         $(".sidebar-menu").find("li.active").removeClass("active");
         $(e.currentTarget).parent('li').addClass("active");
@@ -72,8 +72,8 @@ $('#jstree').on('close_all.jstree', function (e, data) {
       r.push(data.instance.get_node(data.selected[i]).text);
       console.log(data.selected[i]);
     }
-    // if $(tab).pa
-     $(tabs).trigger("open", [r] )
+    $(tabs).trigger("open", [r])
+
   })
 
 $('#jstree').on('after_close.jstree', function (e, data) {
@@ -94,6 +94,7 @@ function loadListOfFiles(dir) {
                return path.extname(e).toLowerCase() === logextension
             })
             if (logfileslist.length > 0) {
+                dirlist.push(dir_name)
                 $('#jstree').jstree().create_node('#' ,  { "id" : dir_name, "text" : dir_name, "icon" : "glyphicon glyphicon-folder-close white" }, "last", function(){
                     for (var logfile of logfileslist.values()){
                         $("#jstree").jstree().create_node(dir_name, { "id" : logfile, "text" : logfile, "icon": "glyphicon glyphicon-file white" },"last", ()=>{
@@ -115,7 +116,7 @@ $(function () {
     });
     // 7 bind to events triggered on the tree
     $('#jstree').on("changed.jstree", function (e, data) {
-        if (data.selected[0] != "ajson5" && data.action == "select_node" && data.event.ctrlKey != true && data.event.shiftKey != true) {
+        if (dirlist.indexOf(data.selected[0]) == -1 && data.action == "select_node" && data.event.ctrlKey != true && data.event.shiftKey != true) {
             var count = 0, i, j, r = [];
             for(i = 0, j = data.selected.length; i < j; i++) {
                 r.push(data.instance.get_node(data.selected[i]).text);
@@ -126,17 +127,8 @@ $(function () {
         }
     });
 
-    // $('#jstree').jstree('closed_node')
     $('#jstree').on('closed_node.jstree', function (e, data) {
             console.log(data.selected[i]);
-
     }); 
 
-    // 8 interact with the tree - either way is OK
-    $('button').on('click', function () {
-      $('#jstree').jstree(true).select_node('child_node_1');
-      $('#jstree').jstree('select_node', 'child_node_1');
-      $.jstree.reference('#jstree').select_node('child_node_1');
-    });
-        
-  });
+});
