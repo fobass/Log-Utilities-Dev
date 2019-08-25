@@ -18,7 +18,7 @@
 			/* padding: 9px 0; */
       background-color: slategray;
       overflow-y:auto; 
-      padding-right:9px;
+      padding-right:0px;
       /* padding-bottom: 100px; */
   }
 		.logo img{
@@ -228,7 +228,7 @@
 
 .exploer-title-actions .btn-add-folder:hover {
   color: white;
-  background-color: red;
+  background-color: rgb(73, 140, 218);
 }
 
 .exploer-treeview {
@@ -246,14 +246,12 @@
   color: #BCBCBC;
   overflow: auto; 
   display: grid;
-  grid-row-start: 1;
-  grid-row-end: 3;
 }
 .white {
   color: rgb(219, 219, 223);
 }
  .page_content{
-   height: calc(100% - 46px);
+   height: calc(100% - 40px);
    width: 100%;
    background-color: rgb(93, 93, 94);
    /* border: 3px solid coral; */
