@@ -22,27 +22,63 @@ $('#id_doctabs').on("open", (event, title) => {
     var existTab = document.getElementById(title + "_tab")
     if (existTab) {
         tabs.selectTab(existTab)
+        selectTabContent(title)
     } else {
         let tab = document.createElement("x-doctab");
         tab.setAttribute("id",title + "_tab")
         tab.innerHTML = "<x-label>"+ title + "</x-label>"
         tabs.openTab(tab); 
         tabs.selectTab(tab)
-        // var content = document.getElementById("id_content")
-        //     let tab_content = document.createElement("main");
-        //     tab_content.setAttribute("id", title + "_tab_content")
-        //     tab_content.textContent = title + "_tab_content"
-        // //  content.innerHTML = "<x-box id="+ title +"_tab_content>Content of  "+ title +"</x-box>"
-        // content.appendChild(tab_content)
+        openTabContent(title)
     }
+    
 
 });
+
+function openTabContent(title) {
+    var i, tabcontent;
+    tabcontent = document.getElementsByClassName("id_tab_content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    let box = document.createElement("x-box");
+        box.setAttribute("id",title + "_box")
+        box.setAttribute("class", "id_tab_content")
+        box.innerHTML = "<h3>"+ title +"</h3>"
+    var content = document.getElementById("content")
+        content.appendChild(box)
+  }
 
 tabs.addEventListener("select", (event) => {
     $('#jstree').jstree('deselect_all');
     $('#jstree').jstree('select_node', event.detail.innerText);
+    selectTabContent(event.detail.innerText)
 
 });
+
+function selectTabContent(title) {
+    var i, tabcontent;
+    tabcontent = document.getElementsByClassName("id_tab_content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    document.getElementById(title + "_box").style.display = "grid";
+
+}
+
+$('#id_doctabs').on("close", (event, title) => {
+    closeTabContent(event.detail.innerText)
+    if (event.detail.nextSibling.innerText)
+        selectTabContent(event.detail.nextSibling.innerText)
+
+});
+
+function closeTabContent(title){
+    document.getElementById(title + "_box").remove()
+
+}
 
 $(document).ready( ()=> {
     $(document).on('click', '.sidebar-menu .nav-link', (e)=> {
@@ -80,7 +116,7 @@ $('#jstree').on('close_all.jstree', function (e, data) {
     }
     $(tabs).trigger("open", [r])
 
-  })
+})
 
 $('#jstree').on('after_close.jstree', function (e, data) {
     $('#jstree').jstree(true).set_icon(data.node, "glyphicon glyphicon-folder-close white");
@@ -90,7 +126,7 @@ $('#jstree').on('after_close.jstree', function (e, data) {
 $('#jstree').on('after_open.jstree', function (e, data) {
     $('#jstree').jstree(true).set_icon(data.node, "glyphicon glyphicon-folder-open white");
     
-  })
+})
 
 function loadListOfFiles(dir) {
     if (dir) {
@@ -117,6 +153,9 @@ function loadListOfFiles(dir) {
 
 
 $(function () {
+
+    $(tabs).trigger("open", "Welcome")
+
     $("#jstree").jstree({
 		"core" : { "check_callback" : true, "animation" : 0, "themes" : { "stripes" : true } },
 		"plugins" : [ "themes", "html_data", "ui", "crrm", "wholerow", "changed" ]
