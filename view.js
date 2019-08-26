@@ -30,9 +30,8 @@ $('#id_doctabs').on("open", (event, title) => {
         tabs.openTab(tab); 
         tabs.selectTab(tab)
         openTabContent(title)
-    }
-    
-
+        selectTabContent(title)
+    }    
 });
 
 function openTabContent(title) {
@@ -41,13 +40,24 @@ function openTabContent(title) {
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
-
+    let id_content = title.replace('.','') + '_box'  
     let box = document.createElement("x-box");
-        box.setAttribute("id",title + "_box")
+        box.setAttribute("id", id_content)
         box.setAttribute("class", "id_tab_content")
-        box.innerHTML = "<h3>"+ title +"</h3>"
+        box.textContent = title
+        // box.innerHTML = '<object type="text/html" data="atp.html" >'+ title + '</object>'
+    
     var content = document.getElementById("content")
         content.appendChild(box)
+
+    $('#'+ id_content).load('./html/orderlog.html', ()=>{
+        document.getElementById("c_h2").setAttribute("id", id_content + "_h2")
+        document.getElementById(id_content + '_h2').innerHTML = '<h1>' + title + '</h1>'
+        document.getElementById("example").setAttribute("id", id_content + "_table")
+        $('#' + id_content + "_table").DataTable();
+    })
+   
+    
   }
 
 tabs.addEventListener("select", (event) => {
@@ -61,22 +71,27 @@ function selectTabContent(title) {
     var i, tabcontent;
     tabcontent = document.getElementsByClassName("id_tab_content");
     for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
+       tabcontent[i].style.display = "none";
     }
-
-    document.getElementById(title + "_box").style.display = "grid";
-
+    if (title) {
+        let id_content = title.replace('.','') + '_box'  
+        document.getElementById(id_content).style.display = "contents";
+        
+    }
 }
 
 $('#id_doctabs').on("close", (event, title) => {
     closeTabContent(event.detail.innerText)
-    if (event.detail.nextSibling.innerText)
+    if (event.detail.nextSibling)
         selectTabContent(event.detail.nextSibling.innerText)
+    else if (event.detail.previousSibling)
+        selectTabContent(event.detail.previousSibling.innerText)
 
 });
 
 function closeTabContent(title){
-    document.getElementById(title + "_box").remove()
+    let id_content = title.replace('.','') + '_box' 
+    document.getElementById(id_content).remove()
 
 }
 
@@ -171,12 +186,11 @@ $(function () {
                     count = i
                 }
                 $(tabs).trigger("open", [data.selected[count]] )
-            // }
         }
+
     });
 
     $('#jstree').on('closed_node.jstree', function (e, data) {
             console.log(data.selected[i]);
     }); 
-
 });

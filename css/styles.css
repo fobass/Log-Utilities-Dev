@@ -254,14 +254,25 @@
    height: calc(100% - 40px);
    width: 100%;
    background-color: rgb(93, 93, 94);
+   overflow: auto; 
    /* border: 3px solid coral; */
+   padding: 10px;
  }
  x-doctab{
   height: 100%;
   width: 100%;
   background-color: rgb(29, 28, 28);
 }
+ .id_tab_content {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(8, 8, 187);
+  border: 3px solid coral;
+}
+.page_content_box {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(8, 8, 187);
+  border: 3px solid coral;
+}
 
- 
-
-  
