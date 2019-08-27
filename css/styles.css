@@ -118,7 +118,7 @@
 
 .left-pane {
     position: relative;
-    width: 18%;
+    width: 8%;
     background: #ccc;
     /* border:  3px solid green;  */
     height: calc(100% - 20px);
@@ -126,7 +126,7 @@
 }
 
 .panes-separator {
-    width: 3px;
+    width: 13px;
     background: rgb(61, 61, 61);
     position: relative;
     cursor: col-resize;

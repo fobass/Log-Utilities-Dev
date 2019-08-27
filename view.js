@@ -13,6 +13,41 @@ let tabs = document.querySelector("#id_doctabs");
 const logextension = ".log"
 var logfileslist
 var dirlist = []
+var dataSource  = [
+    [
+        "Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect",
+        "STiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architectystem Architect",
+        "EdinbTiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architecturgh",
+        "5Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect421",
+        "2011/Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect04/25",
+        "$3,1Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect20"
+    ],
+    [
+        "Garrett Winters",
+        "Director",
+        "Edinburgh",
+        "8422",
+        "2011/07/25",
+        "$5,300"
+    ],
+    [
+        "Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect",
+        "STiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architectystem Architect",
+        "EdinbTiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architecturgh",
+        "5Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect421",
+        "2011/Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect04/25",
+        "$3,1Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect20"
+    ],
+    [
+        "Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect",
+        "STiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architectystem Architect",
+        "EdinbTiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architecturgh",
+        "5Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect421",
+        "2011/Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect04/25",
+        "$3,1Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect20"
+    ]
+
+]
 
 
 $('#id_doctabs').on("open", (event, title) => {
@@ -55,8 +90,22 @@ function openTabContent(title) {
         document.getElementById(id_content + '_h2').innerHTML = '<h1>' + title + '</h1>'
         document.getElementById("example").setAttribute("id", id_content + "_table")
         $('#' + id_content + "_table").DataTable({
-            autoFill: true
+            autoFill: true,
+            data: dataSource
+            // scrollResize: true,
+            // scrollY: 500,
+            // scrollCollapse: true,
+            // paging: false
         });
+
+        dataSource =     [
+            "Tiger Nhitect System Architect",
+            "STiger ystem Architect System Architectystem Architect",
+            "EdinbTigystem Architecturgh",
+            "5Tiger  System Architect Tiger Nixon System Architect System Architect System Architect421",
+            "2011/Tiger NiArchitect System Architect04/25",
+            "$3,1Tiger  Architect20"
+        ]
     })
    
     
