@@ -54,7 +54,9 @@ function openTabContent(title) {
         document.getElementById("c_h2").setAttribute("id", id_content + "_h2")
         document.getElementById(id_content + '_h2').innerHTML = '<h1>' + title + '</h1>'
         document.getElementById("example").setAttribute("id", id_content + "_table")
-        $('#' + id_content + "_table").DataTable();
+        $('#' + id_content + "_table").DataTable({
+            autoFill: true
+        });
     })
    
     
