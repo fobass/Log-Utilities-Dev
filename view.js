@@ -4,50 +4,17 @@ const ipc = require('electron').ipcRenderer
 const dialog = require('electron').remote.dialog
 const selectDirBtn = document.getElementById('select-directory')
 var path = require('path');
-
+const https = require('https')
 require('datatables.net')();
 let fs = require('fs')
 
 let tabs = document.querySelector("#id_doctabs");
 
-const logextension = ".log"
+const logextension = ".tclog"
 var logfileslist
 var dirlist = []
-var dataSource  = [
-    [
-        "Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect",
-        "STiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architectystem Architect",
-        "EdinbTiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architecturgh",
-        "5Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect421",
-        "2011/Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect04/25",
-        "$3,1Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect20"
-    ],
-    [
-        "Garrett Winters",
-        "Director",
-        "Edinburgh",
-        "8422",
-        "2011/07/25",
-        "$5,300"
-    ],
-    [
-        "Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect",
-        "STiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architectystem Architect",
-        "EdinbTiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architecturgh",
-        "5Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect421",
-        "2011/Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect04/25",
-        "$3,1Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect20"
-    ],
-    [
-        "Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect",
-        "STiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architectystem Architect",
-        "EdinbTiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architecturgh",
-        "5Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect421",
-        "2011/Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect04/25",
-        "$3,1Tiger Nixon System Architect System Architect System Architect Tiger Nixon System Architect System Architect System Architect20"
-    ]
-
-]
+var logdirpath = ""
+var dataSource = []
 
 
 $('#id_doctabs').on("open", (event, title) => {
@@ -89,6 +56,7 @@ function openTabContent(title) {
         document.getElementById("c_h2").setAttribute("id", id_content + "_h2")
         document.getElementById(id_content + '_h2').innerHTML = '<h1>' + title + '</h1>'
         document.getElementById("example").setAttribute("id", id_content + "_table")
+        LoadFiles(title)
         $('#' + id_content + "_table").DataTable({
             autoFill: true,
             data: dataSource
@@ -98,18 +66,150 @@ function openTabContent(title) {
             // paging: false
         });
 
-        dataSource =     [
-            "Tiger Nhitect System Architect",
-            "STiger ystem Architect System Architectystem Architect",
-            "EdinbTigystem Architecturgh",
-            "5Tiger  System Architect Tiger Nixon System Architect System Architect System Architect421",
-            "2011/Tiger NiArchitect System Architect04/25",
-            "$3,1Tiger  Architect20"
-        ]
+        // dataSource =     [
+        //     "Tiger Nhitect System Architect",
+        //     "STiger ystem Architect System Architectystem Architect",
+        //     "EdinbTigystem Architecturgh",
+        //     "5Tiger  System Architect Tiger Nixon System Architect System Architect System Architect421",
+        //     "2011/Tiger NiArchitect System Architect04/25",
+        //     "$3,1Tiger  Architect20"
+        // ]
     })
    
     
   }
+
+function addToTableRow(ordDate, rawData, sType){
+    var stTypeNo = "("+ sType +")"
+    var stName = ""
+    switch (sType) {
+        case '79': stName += stTypeNo + 'afReviseOrder'
+            break;
+        case '80': stName += stTypeNo + 'afNewOrder'
+            break;
+        case '82': stName += stTypeNo + 'afOrderTicket'
+            break;
+        case '83': stName += stTypeNo + 'afOrderStatus'
+            break;
+        case '86': stName += stTypeNo + 'afOrderTicketDone'
+            break;
+        case '87': stName += stTypeNo + 'afOrderResend'
+            break;
+        case '88': stName += stTypeNo + 'afPushOrderStatus'
+            break;
+        case '90': stName += stTypeNo + 'ChgQtyPrice'
+            break;
+        case '63': stName += stTypeNo + 'InstMaster'
+            break;
+        case '64': stName += stTypeNo + 'InstDetail'
+            break;
+        
+        default: stName += stTypeNo
+            break;
+    }    
+
+    switch (sType) {
+        case '79': 
+        case '80':
+        case '82': 
+        case '83': 
+        case '86': 
+        case '87': 
+        case '88': 
+              let [TicketNo, OrderDateTime, OMSOrdNo, Remark, LastUpdateDt, StatusText, TickerID] = rawData.split('|')
+              dataSource.push([ordDate, stName, TicketNo, OrderDateTime, OMSOrdNo, Remark, LastUpdateDt, StatusText, TickerID])
+
+        //     break;
+        // case '90': stName += stTypeNo + 'ChgQtyPrice'
+        //     break;
+        // case '63': stName += stTypeNo + 'InstMaster'
+        //     break;
+        // case '64': stName += stTypeNo + 'InstDetail'
+        //     break;
+        
+        default: 
+            break;
+    }    
+
+
+
+    
+
+}
+
+function LoadFiles(filename_) {
+    if (filename_ != "Welcome") {
+        var filename = logdirpath + '\\' + filename_
+        //Check if file exists
+        if (fs.existsSync(filename)) {
+            let data = fs.readFileSync(filename, 'utf8').split('\n')
+            if (data) {
+                dataSource = []
+                data.forEach((contact, index) => {
+                    if (contact != "") {
+                        let [LogDtSourceID] =  contact.split('|') 
+                        let [LogDt, SourceID] = LogDtSourceID.split(' ')
+                        // let [LogDt1, SourceID2, TicketNo, OrderDateTime, OMSOrdNo, Remark, LastUpdateDt, StatusText, TickerID] = contact.split('|')
+                        var rawData = contact.substring(contact.indexOf("||") + 2, contact.length)
+                        addToTableRow(LogDt, rawData, SourceID.trim())
+                        // dataSource.push([LogDt, SourceID, OrderDateTime, TicketNo, OMSOrdNo, Remark, LastUpdateDt, StatusText, TickerID])
+                        console.log(LogDt + SourceID)
+                    }
+                })
+            }
+        } else {
+            console.log("File Doesn\'t Exist. Creating new file.")
+            fs.writeFile(filename, '', (err) => {
+                if (err)
+                    console.log(err)
+            })
+        }
+    }
+}
+
+function DoDecryptFile(filename){
+    if (filename && filename !="\\Welcome") {
+        var data = JSON.stringify({
+            path: filename
+        })
+
+        var options = {
+            host: 'localhost',
+            port: 44359,
+            path: '/api/values',
+            "rejectUnauthorized": false,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            }
+        }
+
+        var req = https.request(options, (res) => {
+
+            var str = ""
+            res.on('data', function (chunk) {
+                str += chunk;
+              })
+            
+            res.on('end', function () {
+                console.log(req.data);
+                console.log(str);
+                if (str == "true"){
+                    loadListOfFiles(logdirpath)
+                }
+                
+              })
+        })
+
+        // req.on('error', (error) => {
+        //     console.error(error)
+        // })
+
+        req.write(data)
+        req.end()
+    }
+}
 
 tabs.addEventListener("select", (event) => {
     $('#jstree').jstree('deselect_all');
@@ -157,7 +257,15 @@ $(document).ready( ()=> {
 $('#add-folder').on( "click", (e)=> {
     dialog.showOpenDialog({properties: ['openDirectory']}, (dir)=> {
         if (dir) {
-            loadListOfFiles(dir[0])
+                fs.readdir(dir[0], (err, logdir)=> {
+                    logfileslist = logdir.filter((e)=>{
+                       return path.extname(e).toLowerCase() === logextension
+                    })
+                    logdirpath = dir[0]
+                    DoDecryptFile(logdirpath)
+                })
+
+            //loadListOfFiles(dir[0])
         }
     })
 
@@ -201,6 +309,7 @@ function loadListOfFiles(dir) {
             logfileslist = logdir.filter((e)=>{
                return path.extname(e).toLowerCase() === logextension
             })
+            logdirpath = dir
             if (logfileslist.length > 0 && dirlist.indexOf(dir_name) == -1) {
                 dirlist.push(dir_name)
                 $('#jstree').jstree().create_node('#' ,  { "id" : dir_name, "text" : dir_name, "icon" : "glyphicon glyphicon-folder-close white" }, "last", function(){
