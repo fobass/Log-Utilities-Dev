@@ -15,6 +15,47 @@ var logfileslist
 var dirlist = []
 var logdirpath = ""
 var dataSource = []
+var rowIndex = 0
+var tickerLog = new Map()
+
+Array.prototype.insert = function ( index, item ) {
+    this.splice( index, 0, item );
+};
+
+var fidStatusSenderCode       = 39;
+var fidStatusTicketNo         = 42;
+var fidStatusOMSOrderNo       = 43;
+var fidStatusFixOrderNo       = 44;
+var fidStatusClientAccount    = 46;
+var fidStatusClientName       = 48;
+var fidStatusBrokerCode       = 51;
+var fidStatusAction           = 52;
+var fidStatusTickerID         = 53;
+var fidStatusOrderType        = 54;
+var fidStatusOrderDateTime    = 55;
+var fidStatusValidity         = 57;
+var fidStatusOrigQty          = 59;
+var fidStatusOrigPrice        = 60;
+var fidStatusMatchQty         = 69;
+var fidStatusMatchPrice       = 70;
+var fidStatusStatusCode       = 73;
+var fidStatusStatusText       = 74;
+var fidStatusErrorNo          = 75;
+var fidStatusLastUpdate       = 76;
+var fidStatusRemark           = 77;
+var fidStatusBranchCode       = 81;
+var fidStatusExchCode         = 123;
+var fidStatusAppClicode       = 125; 
+var fidStatusQtyTodayMatch    = 161;
+var fidStatusViewCond         = 222;
+var fidTicketQty              = 59;
+var fidTicketPrice            = 60;
+
+  
+function tickerLogType(values){
+
+}
+
 
 
 $('#id_doctabs').on("open", (event, title) => {
@@ -59,7 +100,38 @@ function openTabContent(title) {
         LoadFiles(title)
         $('#' + id_content + "_table").DataTable({
             autoFill: true,
-            data: dataSource
+            data: dataSource,
+            columns : [
+                { data: 'LogDt' },
+                { data: 'SourceID' },
+                { data: 'OrderDateTime' },
+                { data: 'TicketNo' },
+                { data: 'OMSOrdNoName' },
+                { data: 'FixOrderNo' },
+                { data: 'ClientName' },
+                { data: 'ClientAccount' },
+                { data: 'ClientBrokerCD' },
+                { data: 'ClientBranchCD' },
+                { data: 'ClientExch' },
+                { data: 'Status' },
+                { data: 'StatusText' },
+                { data: 'Action' },
+                { data: 'Price' },
+                { data: 'Qty' },
+                { data: 'OrigPri' },
+                { data: 'OrigQty' },
+                { data: 'MatchPrice' },
+                { data: 'MatchQty' },
+                { data: 'QtyTodayMatch' },
+                { data: 'Validity' },
+                { data: 'OrderType' },
+                { data: 'SenderCode' },
+                { data: 'LastUpdateDt' },
+                { data: 'ViewCond' },
+                { data: 'ErrorNo' },
+                { data: 'AppCliCode' }
+                // { data: 'Remark' }
+            ]
             // scrollResize: true,
             // scrollY: 500,
             // scrollCollapse: true,
@@ -82,6 +154,7 @@ function openTabContent(title) {
 function addToTableRow(ordDate, rawData, sType){
     var stTypeNo = "("+ sType +")"
     var stName = ""
+    var value = ""
     switch (sType) {
         case '79': stName += stTypeNo + 'afReviseOrder'
             break;
@@ -116,24 +189,104 @@ function addToTableRow(ordDate, rawData, sType){
         case '86': 
         case '87': 
         case '88': 
-              let [TicketNo, OrderDateTime, OMSOrdNo, Remark, LastUpdateDt, StatusText, TickerID] = rawData.split('|')
-              dataSource.push([ordDate, stName, TicketNo, OrderDateTime, OMSOrdNo, Remark, LastUpdateDt, StatusText, TickerID])
+              //let [TicketNo, OrderDateTime, OMSOrdNo, Remark, LastUpdateDt, StatusText, TickerID] = rawData.split('|')
+              var fidvalue = rawData.split("|")
+              var updateVal = {}
+              fidvalue.forEach((fidval) => {
+              if (fidval){
+                var fid = fidval.split("=")[0].charCodeAt(0)
+                fidval.split("=")[1] = "Nulll"
+                  switch (fid) {
+                      case fidStatusTicketNo: updateVal['TicketNo'] = fidval.split("=")[1]; break;
+                      case fidStatusOMSOrderNo: updateVal['OMSOrdNoName'] = fidval.split("=")[1]; break;
+                      case fidStatusFixOrderNo: updateVal['FixOrderNo'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('').AsString := AReader.Data[i];
+                      case fidStatusClientAccount: updateVal['ClientAccount'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('ClientAccount').AsString := AReader.Data[i];
+                      case fidStatusClientName: updateVal['ClientName'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('ClientName').AsString := AReader.Data[i];
+                      case fidStatusBrokerCode: updateVal['ClientBrokerCD'] = fidval.split("=")[1]; break;//ADataSet.FieldByName('ClientBrokerCD').AsString := AReader.Data[i];
+                      case fidStatusAction: updateVal['Action'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName(dsActionName).AsString := AReader.Data[i];
+                      case fidStatusTickerID: updateVal['TickerID'] =  fidval.split("=")[1]; break; //ADataSet.FieldByName(dsTickerIDName).AsString := AReader.Data[i];
+                      case fidStatusOrderType: updateVal['OrderType'] =  fidval.split("=")[1]; break;// ADataSet.FieldByName('OrderType').AsString := AReader.Data[i];
+                      case fidStatusOrderDateTime: updateVal['OrderDateTime'] =  fidval.split("=")[1]; break;// ADataSet.FieldByName(dsOrderDateTimeName).AsDateTime := TimeStamp(AReader.Data[i]);
+                      case fidStatusValidity: updateVal['Validity'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('Validity').AsString := AReader.Data[i];
+                      case fidStatusOrigQty: updateVal['OrigQty'] =  fidval.split("=")[1]; 
+                                              updateVal['Qty'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('OrigQty').AsInteger := AsInteger(AReader.Data[i]);
+                      case fidStatusOrigPrice:  updateVal['OrigPri'] =  fidval.split("=")[1];
+                                                updateVal['Price'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('OrigPrice').AsFloat := AsDouble(AReader.Data[i]);
+                      case fidStatusMatchQty: updateVal['MatchQty'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('MatchQty').AsInteger := AsInteger(AReader.Data[i]);
+                      case fidStatusMatchPrice: updateVal['MatchPrice'] =  fidval.split("=")[1]; break;// ADataSet.FieldByName('MatchPrice').AsFloat := AsDouble(AReader.Data[i]);
+                      case fidStatusStatusCode: updateVal['Status'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('Status').AsString := AReader.Data[i];
+                      case fidStatusStatusText: updateVal['StatusText'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName(dsStatusTextName).AsString := AReader.Data[i];
+                      case fidStatusErrorNo: updateVal['ErrorNo'] =  fidval.split("=")[1];
+                                            updateVal['ViewCond'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('ErrorNo').AsInteger := AsInteger(AReader.Data[i]);
+                      case fidStatusLastUpdate: updateVal['LastUpdateDt'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName(dsLastUpdateDtName).AsDateTime := TimeStamp(AReader.Data[i]);
+                      case fidStatusRemark: updateVal['Remark'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName(dsRemarkName).AsString := AReader.Data[i];
+                      case fidStatusBranchCode: updateVal['ClientBranchCD'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('ClientBranchCD').AsString := AReader.Data[i];
+                      case fidStatusExchCode: updateVal['ClientExch'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('ClientExch').AsString := AReader.Data[i];
+                      case fidStatusAppClicode: updateVal['AppCliCode'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('AppCliCode').AsString := AReader.Data[i];
+                      case fidStatusQtyTodayMatch: updateVal['QtyTodayMatch'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('QtyTodayMatch').AsInteger := AsInteger(AReader.Data[i]);
+                      case fidStatusSenderCode: updateVal['SenderCode'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('SenderCode').AsString := AReader.Data[i];
+                      case fidStatusViewCond: updateVal['ViewCond'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('ViewCond').AsString := AReader.Data[i];
+                      case fidTicketQty: updateVal['Qty'] =  fidval.split("=")[1]; break;// ADataSet.FieldByName('Qty').AsInteger := AsInteger(AReader.Data[i]);
+                      case fidTicketPrice: updateVal['Price'] =  fidval.split("=")[1]; break;//ADataSet.FieldByName('Price').AsFloat := AsDouble(AReader.Data[i]);
+                       default:                  
+                          break;
+                  }
+                }
+              })
 
-        //     break;
-        // case '90': stName += stTypeNo + 'ChgQtyPrice'
-        //     break;
-        // case '63': stName += stTypeNo + 'InstMaster'
-        //     break;
-        // case '64': stName += stTypeNo + 'InstDetail'
-        //     break;
+              updateVal['LogDt'] = ordDate
+              updateVal['SourceID']= stName
+              updateVal['OrderDateTime'] = ordDate
+            if (dataSource.length < 5)
+              dataSource.push(updateVal) 
         
         default: 
             break;
-    }    
-
-
-
+    } 
     
+
+    // var fidvalue = rawData.split("|")
+    // fidvalue.forEach((fidval) => {
+    //     if (fidval){
+    //         var fid = fidval.split("=")[0].charCodeAt(0)
+    //         var value = fidval.split("=")[1]
+    //         switch (fid) {
+    //             case fidStatusTicketNo         : 
+    //             case fidStatusOMSOrderNo       : //ADataSet.FieldByName(dsOMSOrdNoName).AsString := AReader.Data[i];
+    //             case fidStatusFixOrderNo       : //ADataSet.FieldByName('FixOrderNo').AsString := AReader.Data[i];
+    //             case fidStatusClientAccount    : //ADataSet.FieldByName('ClientAccount').AsString := AReader.Data[i];
+    //             case fidStatusClientName       : //ADataSet.FieldByName('ClientName').AsString := AReader.Data[i];
+    //             case fidStatusBrokerCode       : //ADataSet.FieldByName('ClientBrokerCD').AsString := AReader.Data[i];
+    //             case fidStatusAction           : //ADataSet.FieldByName(dsActionName).AsString := AReader.Data[i];
+    //             case fidStatusTickerID         : //ADataSet.FieldByName(dsTickerIDName).AsString := AReader.Data[i];
+    //             case fidStatusOrderType        :// ADataSet.FieldByName('OrderType').AsString := AReader.Data[i];
+    //             case fidStatusOrderDateTime    :// ADataSet.FieldByName(dsOrderDateTimeName).AsDateTime := TimeStamp(AReader.Data[i]);
+    //             case fidStatusValidity         : //ADataSet.FieldByName('Validity').AsString := AReader.Data[i];
+    //             case fidStatusOrigQty          : //ADataSet.FieldByName('OrigQty').AsInteger := AsInteger(AReader.Data[i]);
+    //             case fidStatusOrigPrice        : //ADataSet.FieldByName('OrigPrice').AsFloat := AsDouble(AReader.Data[i]);
+    //             case fidStatusMatchQty         : //ADataSet.FieldByName('MatchQty').AsInteger := AsInteger(AReader.Data[i]);
+    //             case fidStatusMatchPrice       :// ADataSet.FieldByName('MatchPrice').AsFloat := AsDouble(AReader.Data[i]);
+    //             case fidStatusStatusCode       : //ADataSet.FieldByName('Status').AsString := AReader.Data[i];
+    //             case fidStatusStatusText       : //ADataSet.FieldByName(dsStatusTextName).AsString := AReader.Data[i];
+    //             case fidStatusErrorNo          : //ADataSet.FieldByName('ErrorNo').AsInteger := AsInteger(AReader.Data[i]);
+    //             case fidStatusLastUpdate       : //ADataSet.FieldByName(dsLastUpdateDtName).AsDateTime := TimeStamp(AReader.Data[i]);
+    //             case fidStatusRemark           : //ADataSet.FieldByName(dsRemarkName).AsString := AReader.Data[i];
+    //             case fidStatusBranchCode       : //ADataSet.FieldByName('ClientBranchCD').AsString := AReader.Data[i];
+    //             case fidStatusExchCode         : //ADataSet.FieldByName('ClientExch').AsString := AReader.Data[i];
+    //             case fidStatusAppClicode       : //ADataSet.FieldByName('AppCliCode').AsString := AReader.Data[i];
+    //             case fidStatusQtyTodayMatch    : //ADataSet.FieldByName('QtyTodayMatch').AsInteger := AsInteger(AReader.Data[i]);
+    //             case fidStatusSenderCode       : //ADataSet.FieldByName('SenderCode').AsString := AReader.Data[i];
+    //             case fidStatusViewCond         : //ADataSet.FieldByName('ViewCond').AsString := AReader.Data[i];
+    //                                             value = fidval.split("=")[1]
+    //                 break;
+    //             default:
+    //                 break;
+                
+    //         }
+    //        dataSource.insert(rowIndex, value)
+    //         console.log(fidval.split("="))
+    //     }
+    // })
 
 }
 
@@ -145,6 +298,7 @@ function LoadFiles(filename_) {
             let data = fs.readFileSync(filename, 'utf8').split('\n')
             if (data) {
                 dataSource = []
+                tickerLog.clear()
                 data.forEach((contact, index) => {
                     if (contact != "") {
                         let [LogDtSourceID] =  contact.split('|') 
@@ -153,7 +307,7 @@ function LoadFiles(filename_) {
                         var rawData = contact.substring(contact.indexOf("||") + 2, contact.length)
                         addToTableRow(LogDt, rawData, SourceID.trim())
                         // dataSource.push([LogDt, SourceID, OrderDateTime, TicketNo, OMSOrdNo, Remark, LastUpdateDt, StatusText, TickerID])
-                        console.log(LogDt + SourceID)
+                        // console.log(LogDt + SourceID)
                     }
                 })
             }
